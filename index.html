@@ -1,0 +1,784 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="color-scheme" content="light"/>
+<title>Product Choice Study</title>
+<style>
+:root{--ink:#1d2935;--muted:#586674;--line:#dce3e9;--pale:#f6f8fa;--blue:#24658b;--blueDark:#184967;--cyan:#e7f3f8;--positive:#147257;--warn:#a24f14;--white:#fff;--shadow:0 4px 26px rgba(27,49,74,.07)}
+*{box-sizing:border-box}body{margin:0;background:#f3f6f8;color:var(--ink);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}button,input,select,textarea{font:inherit}
+button{cursor:pointer}.topline{height:6px;background:linear-gradient(90deg,#285f81,#6aa69d)}.app{max-width:920px;margin:30px auto 80px;padding:0 20px}.appHeader{display:flex;gap:15px;align-items:center;justify-content:space-between;margin-bottom:16px}.identity{font-size:13px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:#47708a}.step{font-size:13px;color:var(--muted)}.track{height:5px;border-radius:20px;background:#d9e4eb;overflow:hidden;margin:8px 0 24px}.track i{display:block;height:100%;width:0;background:#3f8eac;transition:width .2s}.shell{background:white;border-radius:16px;border:1px solid var(--line);box-shadow:var(--shadow);padding:32px 34px 27px;min-height:300px}h1{font-size:25px;letter-spacing:-.025em;margin:0 0 14px}h2{font-size:19px;margin:21px 0 11px}h3{font-size:16px;margin:18px 0 9px}p{margin:9px 0}small,.small{font-size:13px}.muted{color:var(--muted)}.subtle{font-size:13px;color:#4d6578}.screen{display:none}.screen.active{display:block;animation:screenFadeIn .30s ease-out both}
+.screen.active.fadeExit{animation:screenFadeOut .20s ease-in both;pointer-events:none}
+@keyframes screenFadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@keyframes screenFadeOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-3px)}}
+@media(prefers-reduced-motion:reduce){.screen.active,.screen.active.fadeExit{animation:none!important;transition:none!important}}.screen>p:last-child{margin-bottom:0}.pill{display:inline-block;background:var(--cyan);color:#205675;border-radius:40px;font-size:12px;font-weight:700;letter-spacing:.02em;padding:4px 11px}.hint{background:#f5f9fb;border-left:3px solid #9ec9db;padding:11px 14px;margin:18px 0;border-radius:4px}.notice{border:1px solid #edd4ba;background:#fffaf3;border-radius:9px;padding:15px;margin:14px 0}.error{color:#a02e22}.requiredError{display:none;color:#9c2b24;font-size:12px;font-weight:600;margin-top:6px}.invalidQuestion{border-left:3px solid #b94239;padding-left:10px;background:#fff9f8}.invalidQuestion .requiredError{display:block}.validationSummary{color:#942d29;background:#fff1ef;border:1px solid #e6b9b3;border-radius:8px;padding:9px 12px;margin:18px 0 0;font-size:13px}.validationSummary:empty{display:none}.withdrawnText{color:#586674;font-size:13px;margin-top:18px}.footer{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid var(--line);margin-top:28px;padding-top:19px}.footer button{min-width:112px}.btn{border:1px solid var(--blue);background:var(--blue);color:white;border-radius:8px;padding:10px 18px;font-weight:650}.btn:hover{background:var(--blueDark)}.btn:disabled{opacity:.38;cursor:not-allowed}.btn.secondary{background:#fff;color:var(--blue)}.btn.secondary:hover{background:#eef6fa}.btn.smallBtn{padding:6px 10px;font-size:13px}.radioList label{display:flex;align-items:flex-start;gap:11px;padding:11px 13px;border:1px solid var(--line);border-radius:9px;margin:8px 0;cursor:pointer}.radioList label:has(input:checked){background:#edf7fc;border-color:#70a9cc}.radioList input{accent-color:#1f6e97;margin-top:5px;flex-shrink:0}.targets{width:100%;border-collapse:collapse;margin:16px 0 9px}.targets th,.targets td{text-align:left;padding:8px 13px;border-bottom:1px solid var(--line)}.targets tr:nth-child(even){background:#fafbfd}.targets th{color:var(--muted);font-size:13px}.roleText{border:1px solid var(--line);border-radius:10px;padding:17px 18px;margin-top:18px;background:#fbfcfd}.products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:17px 0}.product{border:1px solid #bfcbd4;border-radius:11px;padding:15px 14px;background:white;min-width:0;transition:border-color .12s,background .12s;text-align:left}.product:hover{border-color:#438db5}.product.selected{border:2px solid #177fa2;background:#eff9fc;padding:14px 13px}.product .cardhead{min-height:51px;display:flex;justify-content:space-between;align-items:flex-start;gap:5px}.product h3{font-size:17px;margin:0}.recommend{background:#e1f1e9;color:#126a49;font-size:11px;font-weight:750;border-radius:20px;padding:3px 8px;line-height:1.3}.product table{font-size:13px;width:100%;border-collapse:collapse}.product td{padding:5px 0;border-bottom:1px solid #eff1f4}.product td:last-child{text-align:right;font-weight:650}.product .selectline{display:flex;gap:9px;align-items:center;margin-top:12px;font-weight:650;color:var(--blue);font-size:13px}.product input{accent-color:var(--blue);width:17px;height:17px}.sponsorship{border-left:4px solid #407d93;background:#edf5f8;padding:12px 15px;border-radius:6px;margin:16px 0}.sponsorship strong{display:block;margin-bottom:3px}.block{margin:23px 0 28px;padding-top:9px;border-top:1px solid #ebeff2}.block:first-child{border-top:0;margin-top:3px}.q{padding:14px 0 19px;border-bottom:1px solid #e9edf0}.q:last-child{border-bottom:0}.questionText{font-weight:560;margin-bottom:11px}.scalePage .questionText,.checkQuestions .questionText{font-size:18px;line-height:1.48;letter-spacing:-.005em}.scaleBox{display:flex;gap:3px;align-items:center;justify-content:space-between;max-width:540px}.scaleBox label{flex:1;max-width:62px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer}.scaleBox input{appearance:none;-webkit-appearance:none;display:block;width:30px;height:30px;border:1.3px solid #9aaab5;border-radius:50%;margin:0;background:white;cursor:pointer}.scaleBox input:checked{border:9px solid #2a729a}.scaleBox input:focus-visible{outline:3px solid #b7d4ea;outline-offset:2px}.scaleBox span{font-size:13px;color:#4c5864}.anchors{display:flex;justify-content:space-between;max-width:540px;margin-top:6px;color:#526775;font-size:12px;gap:12px}.anchors span:last-child{text-align:right}.checkQuestions{max-width:660px}.checkQuestions .q{padding:13px 0 17px}.checkQuestions .radioList label{padding:8px 12px}.twoCol{display:grid;grid-template-columns:1fr 1fr;gap:17px}.field{margin:15px 0}.field>label{display:block;font-weight:560;margin-bottom:6px}.field input,.field select{width:100%;border:1px solid #b9c8d2;border-radius:8px;padding:10px;background:white;color:#1d2935}.field input:focus,.field select:focus{outline:2px solid #8ac0dc;outline-offset:1px}.field small{display:block;color:var(--muted);margin-top:6px}.declined{padding:18px 0}.research{display:none;margin:0 0 18px;border:1px solid #bdcede;border-radius:11px;background:#eaf3fa;padding:13px 16px;font-size:13px}.research.on{display:block}.research .tools{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.research label{font-weight:650}.research select{max-width:200px;padding:5px 6px;border-radius:6px;background:#fff;border:1px solid #aabfcf}.research .meta{border-top:1px solid #c9d8e4;margin-top:10px;padding-top:10px;color:#234559}.research code{font-size:11px;word-break:break-all}.research pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px;max-height:120px;overflow:auto}.research .status{margin-top:8px}.researchHeader{font-size:13px;font-weight:700;color:#245573;margin-bottom:8px}.screenFlag{font-size:11px;text-transform:uppercase;color:#54758a;font-weight:700;letter-spacing:.05em}.footerText{color:var(--muted);font-size:12px}.hidden{display:none!important}.printOnly{display:none}
+@media(max-width:640px){.app{margin:15px auto 60px;padding:0 10px}.shell{padding:23px 17px 19px;border-radius:11px}h1{font-size:21px}.products{gap:8px}.product{padding:11px 9px}.product.selected{padding:10px 8px}.product .cardhead{min-height:58px;display:block}.product h3{font-size:15px}.recommend{display:inline-block;margin-top:4px}.product table{font-size:12px}.twoCol{grid-template-columns:1fr}.scaleBox input{width:27px;height:27px}.scaleBox input:checked{border-width:8px}.research{padding:10px}}
+
+/* Researcher-only condition selector; no styling leaks to participant screens. */
+.selectorIntro{padding:22px;border:1px solid #e2d0b6;border-radius:12px;background:linear-gradient(140deg,#fbf5eb,#f4e9d8);color:#493927}
+.selectorEyebrow{font-size:11px;letter-spacing:.12em;font-weight:800;color:#8c5a2c;margin-bottom:6px}
+.selectorIntro h1{margin:0 0 8px;color:#3c3025}
+.selectorIntro p{margin:6px 0 18px}
+.variantSelectors{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0 24px}
+.variantSelectors label{display:grid;gap:5px;font-weight:650;font-size:13px}
+.variantSelectors select{max-width:100%;width:100%;border:1px solid #bfa98c;background:white;padding:10px;border-radius:6px;color:#33281d}
+.matrixHead,.matrixRow{display:grid;grid-template-columns:minmax(110px,1.1fr) 1fr 1fr;gap:9px;align-items:stretch}
+.matrixHead{font-size:10px;font-weight:750;letter-spacing:.05em;color:#6a4c2c;text-align:center;margin-bottom:7px}
+.matrixHead span:first-child{text-align:left}
+.matrixRow{margin-bottom:9px}
+.matrixLabel{display:flex;align-items:center;font-weight:700;font-size:13px;padding:8px 3px}
+.matrixCell{border:1px solid #c6ad87;background:#fffefb;border-radius:8px;display:flex;flex-direction:column;gap:4px;text-align:left;padding:13px;min-height:91px;box-shadow:0 1px 2px rgba(0,0,0,.045);color:#43311e}
+.matrixCell:hover,.matrixCell:focus-visible{background:#fff3d9;border-color:#a87940;outline:2px solid #d8b27d;outline-offset:1px}
+.matrixCell b{font-size:17px;color:#7e522a}
+.matrixCell span{font-size:12px;line-height:1.35}
+.selectorFoot{font-size:12px;color:#725536;margin-top:17px!important;margin-bottom:0!important}
+@media(max-width:640px){.selectorIntro{padding:12px}.variantSelectors{grid-template-columns:1fr}.matrixHead,.matrixRow{grid-template-columns:76px 1fr 1fr;gap:5px}.matrixLabel{font-size:11px}.matrixCell{padding:8px;min-height:106px}.matrixCell span{font-size:11px}.matrixHead{font-size:9px}}
+
+@media print{.topline,.track,.footer,.research{display:none!important}.screen{display:block!important;page-break-after:always}.shell{border:0;box-shadow:none}.printOnly{display:block}}
+
+.generalInstructions{padding-left:0;margin:20px 0 10px;list-style:none}
+.generalInstructions li{margin:3px 0;padding-left:1.45em;position:relative}
+.generalInstructions li::before{content:'-';position:absolute;left:0;font-weight:700}
+.instructionWarning{color:#cc332a;font-weight:800;margin:8px 0 24px}
+.researchHeading{font-weight:700;color:#27536d;background:#eef5fa;border-left:3px solid #7aa9c5;padding:8px 11px;border-radius:3px;margin:14px 0 9px}
+.researchCode{font-size:12px;color:#5b7081;font-weight:600}
+.demographicRadios{max-width:600px}
+.demographicRadios label{margin:4px 0;padding:7px 11px}
+.field .demographicRadios input[type=radio]{width:16px;height:16px;flex:0 0 16px;margin-top:4px;padding:0;border:0}
+@media (max-width:640px){.demographicRadios label{padding:8px}}
+
+/* Researcher-approved visual emphasis; identical in participant and preview modes. */
+.attentionHighlight{background:#fff200;color:inherit;padding:0 1px;border-radius:1px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+/* Final screen: only the large completion message is visible. */
+#S07.active{display:flex;min-height:225px;align-items:center;justify-content:center}
+#S07 .completionMessage{margin:0;text-align:center;font-size:clamp(22px,2.7vw,28px);font-weight:600;line-height:1.45;letter-spacing:-.015em}
+body.completionScreenActive .appHeader,body.completionScreenActive .track{display:none}
+</style>
+</head>
+<body>
+<div class="topline"></div>
+<div class="app">
+  <div class="appHeader"><div class="identity">Product Choice Study</div><div id="stepText" class="step"></div></div>
+  <div class="track"><i id="progressBar"></i></div>
+  <aside id="researchPanel" class="research" aria-label="Researcher preview tools">
+    <div class="researchHeader">RESEARCHER PREVIEW — not shown to participants</div>
+    <div class="tools"><label for="previewConfig">Condition/configuration</label><select id="previewConfig"></select>
+    <button id="previewReset" class="btn smallBtn secondary" type="button">Reset preview</button>
+    <button id="previewBack" class="btn smallBtn secondary" type="button">Back</button>
+    <label for="jumpTo">Screen</label><select id="jumpTo"></select><button id="jumpBtn" type="button" class="btn smallBtn secondary">Go</button>
+    <button id="downloadJson" type="button" class="btn smallBtn secondary">JSON</button>
+    <button id="downloadCsv" type="button" class="btn smallBtn secondary">CSV</button></div>
+    <div class="status" id="previewStatus"></div>
+    <div id="researchMetadata" class="meta"></div>
+  </aside>
+  <main class="shell">
+    <section class="screen" id="STEST" aria-labelledby="selectorTitle">
+      <div class="selectorIntro">
+        <div class="selectorEyebrow">RESEARCHER TEST MODE</div>
+        <h1 id="selectorTitle">Select an Experimental Condition</h1>
+        <p>Researcher-only preview. Choose a condition below; the subsequent screens use the same design and questionnaire as participant mode.</p>
+        <div class="variantSelectors">
+          <label>Recommended Energy Bar A profile
+            <select id="introProfile"><option value="X">Profile X — lower fat / higher carbohydrates</option><option value="Y">Profile Y — higher fat / lower carbohydrates</option></select>
+          </label>
+          <label>Recommended Energy Bar A position
+            <select id="introPosition"><option value="L">Left</option><option value="R">Right</option></select>
+          </label>
+        </div>
+        <div class="matrixHead"><span>REPRESENTATIONAL MANDATE</span><span>NO DISCLOSURE</span><span>DISCLOSURE</span></div>
+        <div class="matrixRow"><div class="matrixLabel">Retailer-side mandate</div>
+          <button class="matrixCell" type="button" data-matrix-condition="C1"><b>C1</b><span>Retailer-side<br>No sponsorship disclosure</span></button>
+          <button class="matrixCell" type="button" data-matrix-condition="C2"><b>C2</b><span>Retailer-side<br>Sponsorship disclosure</span></button></div>
+        <div class="matrixRow"><div class="matrixLabel">Consumer-side mandate</div>
+          <button class="matrixCell" type="button" data-matrix-condition="C3"><b>C3</b><span>Consumer-side<br>No sponsorship disclosure</span></button>
+          <button class="matrixCell" type="button" data-matrix-condition="C4"><b>C4</b><span>Consumer-side<br>Sponsorship disclosure</span></button></div>
+        <p class="selectorFoot">There are 4 conditions × 2 profile allocations × 2 card positions = <strong>16 configurations</strong>. Test-mode data never produces a real participant completion code.</p>
+      </div>
+    </section>
+    <section class="screen active" id="S00">
+      <h1 style="text-align:center">Informed Consent</h1>
+      <p>I hereby confirm that I agree to participate in a study about decision making in various fields.</p>
+      <p><b>Study goal:</b> to assess product choice accuracy.</p>
+      <p><b>Potential risks:</b> no potential risks.</p>
+      <p><b>Potential benefits from the research:</b> contribution to the field of decision making.</p>
+      <p>I understand that if, for any reason, I will choose to stop my participation I can do it at any time and without cost and will not be required to explain my decision.</p>
+      <p>In the event that during or following the experiment you will feel uncomfortable, please contact the principal investigator(s) through the email listed below.</p>
+      <p>Please indicate whether you agree to participate in the study.</p>
+      <div class="radioList" role="radiogroup" aria-label="Informed consent">
+        <label><input type="radio" name="consent" value="agree"/> I agree</label>
+        <label><input type="radio" name="consent" value="decline"/> I disagree and wish to decline my participation</label>
+      </div>
+    </section>
+    <section class="screen" id="SGEN">
+      <h1 style="text-decoration:underline">General instructions</h1>
+      <ul class="generalInstructions">
+        <li>This task requires your full attention.</li>
+        <li>Please complete this task on a desktop or laptop computer only.</li>
+        <li>Please complete the task in one sitting, without breaks.</li>
+        <li>From now until the end of the task, please do not browse the web or use your mobile phone or other devices.</li>
+      </ul>
+      <p class="instructionWarning">Failing to comply with these requirements may invalidate your participation.</p>
+      <p>Thank you.</p>
+    </section>
+    <section class="screen" id="S01">
+      <span class="screenFlag">Shopping task</span><h1>Product Choice Task</h1>
+      <p>Your task is to choose the energy bar that best matches your nutritional objectives.</p>
+      <p>The stated values are targets rather than minimum or maximum requirements. Values above or below each target represent deviations from your objective.</p>
+      <p>All three nutritional objectives are equally important.</p>
+      <p>The energy bars available in this task will have the same price and serving size.</p>
+      <h2>Your Nutritional Objectives</h2>
+      <table class="targets"><thead><tr><th>Attribute</th><th>Objective</th></tr></thead><tbody>
+        <tr><td>Total fat</td><td>7 g</td></tr><tr><td>Protein</td><td>11 g</td></tr><tr><td>Carbohydrates</td><td>30 g</td></tr>
+      </tbody></table>
+    </section>
+    <section class="screen" id="S02">
+      <span class="screenFlag">AI agent</span><h1>About the AI Agent</h1>
+      <p>An online retailer provides an AI agent to help shoppers evaluate energy bars offered by independent sellers through its store.</p>
+      <div class="roleText"><h2 style="margin-top:0">Its Role</h2><p id="roleText"></p><p>You remain free to accept or reject the AI agent's recommendation.</p></div>
+    </section>
+    <section class="screen" id="S03">
+      <span class="screenFlag">Recommendation</span><h1>AI Recommendation</h1>
+      <p>Below are two energy bars. The AI agent recommends Energy Bar A. Review the nutritional information for both energy bars and select the one you would choose.</p>
+      <div id="disclosure" class="sponsorship hidden"><strong>Sponsorship Disclosure</strong><span id="disclosureText"></span></div>
+      <h2>Choose an energy bar</h2><div id="products" class="products" role="radiogroup" aria-label="Choose an energy bar"></div>
+      <p class="muted small">The energy bars have the same price and serving size.</p>
+    </section>
+    <section class="screen" id="S04">
+      <span class="screenFlag">Your evaluation</span><h1>About the AI Agent's Recommendation</h1>
+      <p>Please indicate how much you agree or disagree with the following statements about the AI agent and its recommendation.</p>
+      <div class="scalePage" id="scaleBlocks_PRMV"></div>
+    </section>
+    <section class="screen" id="S04b">
+      <span class="screenFlag">Your evaluation</span><h1>About the AI Agent's Recommendation</h1>
+      <p>Please indicate how much you agree or disagree with the following statements about the AI agent and its recommendation.</p>
+      <div class="scalePage" id="scaleBlocks_PST_TRUST"></div>
+    </section>
+    <section class="screen" id="S04c">
+      <span class="screenFlag">Your evaluation</span><h1>About the AI Agent's Recommendation</h1>
+      <p>Please indicate how much you agree or disagree with the following statements about the AI agent and its recommendation.</p>
+      <div class="scalePage" id="scaleBlocks_RELInt"></div>
+    </section>
+    <section class="screen" id="S04d">
+      <span class="screenFlag">Your evaluation</span><h1>About the AI Agent's Recommendation</h1>
+      <p>Please indicate how much you agree or disagree with the following statements about the AI agent and its recommendation.</p>
+      <div class="scalePage" id="scaleBlocks_PRB"></div>
+    </section>
+    <section class="screen" id="S05">
+      <span class="screenFlag">Study questions</span><h1>Questions About the Information Presented</h1>
+      <p>Please answer the following questions based on what you saw during the task.</p>
+      <div id="checksDisclosure" class="checkQuestions"></div>
+    </section>
+    <section class="screen" id="S05b">
+      <span class="screenFlag">Study questions</span><h1>Questions About the Information Presented</h1>
+      <p>Please answer the following questions based on what you saw during the task.</p>
+      <div id="checksMandate" class="checkQuestions"></div>
+    </section>
+    <section class="screen" id="S05c">
+      <span class="screenFlag">Study questions</span><h1>Questions About the Information Presented</h1>
+      <p>Please answer the following questions based on what you saw during the task.</p>
+      <div id="checksSponsorship" class="checkQuestions"></div>
+    </section>
+    <section class="screen" id="S06">
+      <span class="screenFlag">Background</span><h1>About You</h1>
+      <p>Finally, we would like to ask a few background questions. All questions are required.</p>
+      <div class="twoCol">
+        <div class="field"><label for="gender">What is your gender?</label><select id="gender"><option value="">Select an option</option><option value="female">Female</option><option value="male">Male</option><option value="nonbinary">Nonbinary</option><option value="self_describe">Another identity</option></select></div>
+        <div class="field"><label for="age">What is your age in years?</label><input id="age" type="number" min="18" max="80" step="1" inputmode="numeric" placeholder="Age"/></div>
+      </div>
+      <div class="field" id="educationField">
+        <label>What is your highest level of education?</label>
+        <div class="radioList demographicRadios" role="radiogroup" aria-label="Education">
+          <label><input type="radio" name="education" value="left_before_lower_secondary"/> left before completing lower-secondary</label>
+          <label><input type="radio" name="education" value="completed_lower_secondary"/> completed lower-secondary</label>
+          <label><input type="radio" name="education" value="completed_upper_secondary"/> completed upper-secondary</label>
+          <label><input type="radio" name="education" value="studied_higher_education"/> studied in higher education</label>
+          <label><input type="radio" name="education" value="completed_bachelor"/> completed bachelor degree</label>
+          <label><input type="radio" name="education" value="completed_master_or_above"/> completed master's degree or above</label>
+        </div>
+      </div>
+      <div class="field" id="incomeField">
+        <label>What is your household annual income?</label>
+        <div class="radioList demographicRadios" role="radiogroup" aria-label="Household annual income">
+          <label><input type="radio" name="income" value="under_10000"/> Less than £10,000</label>
+          <label><input type="radio" name="income" value="10000_19999"/> £10,000 - £19,999</label>
+          <label><input type="radio" name="income" value="20000_29999"/> £20,000 - £29,999</label>
+          <label><input type="radio" name="income" value="30000_39999"/> £30,000 - £39,999</label>
+          <label><input type="radio" name="income" value="40000_49999"/> £40,000 - £49,999</label>
+          <label><input type="radio" name="income" value="50000_59999"/> £50,000 - £59,999</label>
+          <label><input type="radio" name="income" value="60000_69999"/> £60,000 - £69,999</label>
+          <label><input type="radio" name="income" value="70000_79999"/> £70,000 - £79,999</label>
+          <label><input type="radio" name="income" value="80000_89999"/> £80,000 - £89,999</label>
+          <label><input type="radio" name="income" value="90000_99999"/> £90,000 - £99,999</label>
+          <label><input type="radio" name="income" value="100000_149999"/> £100,000 - £149,999</label>
+          <label><input type="radio" name="income" value="150000_or_more"/> £150,000 or more</label>
+        </div>
+      </div>
+    </section>
+    <section class="screen" id="S07" role="status" aria-live="polite">
+      <p class="completionMessage">You've completed the survey. Thank you for your participation.</p>
+    </section>
+    <section class="screen" id="SWITHDRAW"><h1>Participation Withdrawn</h1><p>You have withdrawn from the study. No completion code will be issued by this application.</p><p>Please follow the study platform instructions regarding your submission.</p></section><section class="screen" id="SDECLINE"><h1>Participation Declined</h1><p>You have chosen not to participate. No experimental task will be presented.</p></section>
+    <section class="screen" id="SDEVICE" aria-labelledby="deviceBlockTitle">
+      <span class="screenFlag">Study access</span>
+      <h1 id="deviceBlockTitle">Desktop or Laptop Required</h1>
+      <div class="notice" role="alert">
+        <p><strong>This study is available only on a desktop or laptop computer.</strong></p>
+        <p>Mobile phones and tablets are not permitted. Please open your study link on a desktop or laptop computer to participate.</p>
+        <p>No study completion code can be issued from this device.</p>
+      </div>
+    </section>
+    <section class="screen" id="SERROR"><h1>Study Link Not Configured</h1><div class="notice" id="errorText"></div><p class="small muted">Please return to the study platform or contact the study administrator using the approved contact information.</p></section>
+    <div id="validationSummary" class="validationSummary" role="alert" aria-live="assertive"></div><div class="footer" id="footer"><div id="backArea"></div><div class="footerText" id="footerNote"></div><button id="nextBtn" type="button" class="btn">Continue</button></div><div id="withdrawLine" class="withdrawnText hidden"><button type="button" id="withdrawBtn" class="btn smallBtn secondary">Withdraw from study</button></div>
+  </main>
+</div>
+<script id="study-config" type="application/json">{"study":"8521.01.01","protocol_version":"1.5","date":"2026-10-30","language":"en-US","status":"Accepted measures and consent incorporated; operational decisions explicitly deferred as noted","conditions":{"C1":{"mandate":"retailer","disclosure":0,"label":"Retailer-side mandate × No disclosure"},"C2":{"mandate":"retailer","disclosure":1,"label":"Retailer-side mandate × Disclosure"},"C3":{"mandate":"consumer","disclosure":0,"label":"Consumer-side mandate × No disclosure"},"C4":{"mandate":"consumer","disclosure":1,"label":"Consumer-side mandate × Disclosure"}},"sponsorship_present_in_all_conditions_underlying_simulation":true,"disclosure_title":"Sponsorship Disclosure","disclosure_text":"The seller of the recommended product paid for the product to be featured in this AI agent's recommendation.","role_intro":"An online retailer provides an AI agent to help shoppers evaluate energy bars offered by independent sellers through its store.","role_text":{"retailer":"For this shopping task, the AI agent has been assigned to represent the retailer. It is instructed to prioritize the retailer's interests when evaluating products and making a recommendation.","consumer":"For this shopping task, the AI agent has been assigned to represent the consumer. It is instructed to prioritize the consumer's interests when evaluating products and making a recommendation."},"role_closure":"You remain free to accept or reject the AI agent's recommendation.","targets":{"fat":7.0,"protein":11.0,"carbohydrates":30.0},"profiles":{"X":{"fat":5.0,"protein":11.0,"carbohydrates":34.5,"abs_deviations":{"fat":2.0,"protein":0.0,"carbohydrates":4.5},"sum_abs_deviations":6.5,"MAD":2.1666666666666665,"estimated_kcal":227.0},"Y":{"fat":9.0,"protein":11.0,"carbohydrates":25.5,"abs_deviations":{"fat":2.0,"protein":0.0,"carbohydrates":4.5},"sum_abs_deviations":6.5,"MAD":2.1666666666666665,"estimated_kcal":227.0}},"configurations":[{"configuration_id":"C1_X_L","condition":"C1","mandate":"retailer","disclosure":0,"profile_A":"X","profile_B":"Y","A_position":"left"},{"configuration_id":"C1_X_R","condition":"C1","mandate":"retailer","disclosure":0,"profile_A":"X","profile_B":"Y","A_position":"right"},{"configuration_id":"C1_Y_L","condition":"C1","mandate":"retailer","disclosure":0,"profile_A":"Y","profile_B":"X","A_position":"left"},{"configuration_id":"C1_Y_R","condition":"C1","mandate":"retailer","disclosure":0,"profile_A":"Y","profile_B":"X","A_position":"right"},{"configuration_id":"C2_X_L","condition":"C2","mandate":"retailer","disclosure":1,"profile_A":"X","profile_B":"Y","A_position":"left"},{"configuration_id":"C2_X_R","condition":"C2","mandate":"retailer","disclosure":1,"profile_A":"X","profile_B":"Y","A_position":"right"},{"configuration_id":"C2_Y_L","condition":"C2","mandate":"retailer","disclosure":1,"profile_A":"Y","profile_B":"X","A_position":"left"},{"configuration_id":"C2_Y_R","condition":"C2","mandate":"retailer","disclosure":1,"profile_A":"Y","profile_B":"X","A_position":"right"},{"configuration_id":"C3_X_L","condition":"C3","mandate":"consumer","disclosure":0,"profile_A":"X","profile_B":"Y","A_position":"left"},{"configuration_id":"C3_X_R","condition":"C3","mandate":"consumer","disclosure":0,"profile_A":"X","profile_B":"Y","A_position":"right"},{"configuration_id":"C3_Y_L","condition":"C3","mandate":"consumer","disclosure":0,"profile_A":"Y","profile_B":"X","A_position":"left"},{"configuration_id":"C3_Y_R","condition":"C3","mandate":"consumer","disclosure":0,"profile_A":"Y","profile_B":"X","A_position":"right"},{"configuration_id":"C4_X_L","condition":"C4","mandate":"consumer","disclosure":1,"profile_A":"X","profile_B":"Y","A_position":"left"},{"configuration_id":"C4_X_R","condition":"C4","mandate":"consumer","disclosure":1,"profile_A":"X","profile_B":"Y","A_position":"right"},{"configuration_id":"C4_Y_L","condition":"C4","mandate":"consumer","disclosure":1,"profile_A":"Y","profile_B":"X","A_position":"left"},{"configuration_id":"C4_Y_R","condition":"C4","mandate":"consumer","disclosure":1,"profile_A":"Y","profile_B":"X","A_position":"right"}],"recommendation":"Energy Bar A","outcome":{"code":"RELBhv","values":{"A":1,"B":0}},"stimulus_constants":{"equal_price":true,"equal_serving_size":true,"recommendation_always_A":true,"both_products_visible_before_choice":true,"participant_facing_MAD":false,"participant_facing_estimated_calories":false,"display_numeric_price":false,"display_numeric_serving_size":false,"display_price_serving_equivalence_text":true,"target_values_are_not_min_max":true,"attribute_weighting":"equal"},"participant_flow":["consent","general_instructions","task_and_objectives","representational_mandate","recommendation_disclosure_and_choice","substantive_scales","checks","demographics_required","debrief"],"measures":[{"code":"PRMV1","construct":"Perceived Representational Mandate Violation","item":"The AI agent failed to meet its obligations in making this recommendation.","reverse":false},{"code":"PRMV2","construct":"Perceived Representational Mandate Violation","item":"The AI agent did a poor job of meeting its obligations in making this recommendation.","reverse":false},{"code":"PRMV3","construct":"Perceived Representational Mandate Violation","item":"The AI agent did not fulfill its most important obligations in making this recommendation.","reverse":false},{"code":"PST1","construct":"Perceived Sponsorship Transparency","item":"It was clear whether the AI agent's recommendation was sponsored.","reverse":false},{"code":"PST2","construct":"Perceived Sponsorship Transparency","item":"The AI agent clearly communicated whether a commercial sponsor was involved in its recommendation.","reverse":false},{"code":"PST3","construct":"Perceived Sponsorship Transparency","item":"The commercial nature of the AI agent's recommendation was clearly communicated.","reverse":false},{"code":"TRUST1","construct":"Trust","item":"I am confident in the AI agent.","reverse":false},{"code":"TRUST2","construct":"Trust","item":"The AI agent is reliable.","reverse":false},{"code":"TRUST3","construct":"Trust","item":"I can trust the AI agent.","reverse":false},{"code":"RELInt1","construct":"Intentional Reliance","item":"I would be willing to follow the AI agent's product recommendation.","reverse":false},{"code":"RELInt2","construct":"Intentional Reliance","item":"I would rely on the AI agent's recommendation when deciding which product to choose.","reverse":false},{"code":"RELInt3","construct":"Intentional Reliance","item":"I would be likely to select the product recommended by the AI agent.","reverse":false},{"code":"PRB1","construct":"Perceived Recommendation Bias","item":"The AI agent's recommendation appeared biased toward the seller's commercial interests.","reverse":false},{"code":"PRB2","construct":"Perceived Recommendation Bias","item":"The AI agent appeared to favor the recommended product for commercial reasons.","reverse":false},{"code":"PRB3","construct":"Perceived Recommendation Bias","item":"Commercial considerations appeared to carry disproportionate weight in the AI agent's recommendation.","reverse":false}],"checks":{"RM-MC1":{"label":"Representational Mandate manipulation check","text":"The AI agent was assigned to represent:","type":"bipolar7","anchors":["The retailer","The consumer"]},"RM-MC2":{"label":"Representational Mandate manipulation check","text":"The AI agent's stated role was to act on behalf of:","type":"bipolar7","anchors":["The retailer","The consumer"]},"RM-AC":{"label":"Representational Mandate Comprehension","text":"According to the information provided, which of the following best describes the AI agent's assigned role?","type":"single_choice","options":["The AI agent was assigned to represent the retailer.","The AI agent was assigned to represent the consumer.","The AI agent was assigned to represent both parties equally.","I cannot determine this from the information provided."]},"SD-MC1":{"label":"Sponsorship Disclosure manipulation check","text":"The recommendation screen included an explicit sponsorship disclosure.","type":"agreement7"},"SD-MC2":{"label":"Sponsorship Disclosure manipulation check","text":"The AI agent explicitly stated that its recommendation involved sponsorship.","type":"agreement7"},"SD-AC1":{"label":"Sponsorship Disclosure Recognition","text":"Did the AI agent's recommendation screen include an explicit statement about commercial sponsorship?","type":"single_choice","options":["Yes","No","I do not know"]},"SD-AC2":{"label":"Sponsorship Disclosure Comprehension","text":"Which of the following best describes what the recommendation screen explicitly stated about commercial sponsorship?","type":"single_choice","conditions":["C2","C4"],"options":["The seller paid for the recommended product to be featured.","The seller did not pay for the recommended product to be featured."],"required_if_displayed":true,"applicability":["C2","C4"],"unadministered_in":["C1","C3"]}},"scales":{"agreement7":{"low":1,"high":7,"low_label":"Strongly disagree","high_label":"Strongly agree"},"RM-MC":{"low":1,"high":7,"low_label":"The retailer","high_label":"The consumer"}},"computed_scores":{"PRMV_mean":"mean(PRMV1,PRMV2,PRMV3) (raw responses; no reverse coding)","PST_mean":"mean(PST1,PST2,PST3)","TRUST_mean":"mean(TRUST1,TRUST2,TRUST3)","RELInt_mean":"mean(RELInt1,RELInt2,RELInt3)","PRB_mean":"mean(PRB1,PRB2,PRB3)","RM_MC_mean":"mean(RM-MC1,RM-MC2)","SD_MC_mean":"mean(SD-MC1,SD-MC2)"},"check_coding":{"RM-AC":"correct if selected principal matches assigned mandate; else 0","SD-AC1":"correct if Yes under disclosure=1 or No under disclosure=0; I do not know is incorrect; preserve raw option","SD-AC2":"C2/C4: displayed required question, paid placement=1, seller did not pay=0; C1/C3: NA by design, never classify as missing or incorrect."},"preview_rules":{"researcher_back_button_on_each_screen":true,"researcher_notes_hidden_from_participant":true,"preview_researcher_notes_excluded_on":["About the AI Agent","AI Recommendation"],"scale_construct_item_source_metadata_preview_only":true,"compact_product_attribute_rows":true,"do_not_reveal_hidden_sponsorship_in_no_disclosure_conditions":true},"excluded_construct":"Perceived Persuasive Intent (PPI) — omitted by decision","optional_choices_for_pretest":["Exact hosting, Qualtrics/Prolific/HTML handoff and technical persistence implementation (design policy accepted)","Demographic response categories, income units and nonresponse options","Approved investigator contact channel and approved debrief implementation (consent wording remains unchanged)","Manipulation-check criteria and rules — during data-analysis planning","Specific statistical contrasts and multiplicity strategy — during data-analysis planning","Sample size after pretests","Preregistration after sample size","Qualtrics screen/page breaks after researcher preview","Technical implementation of mandatory-item validation and server-confirmed completion-state handoff","Prolific handling of tech-failure partial payments, in accordance with policies"],"sources":["Wang, W., Xu, J., & Wang, M. (2018). Effects of recommendation neutrality and sponsorship disclosure on trust vs. distrust in online recommendation agents: Moderating role of explanations for organic recommendations. Management Science, 64(11), 5198–5219. https://doi.org/10.1287/mnsc.2017.2906","Wang, W., & Wang, M. (2019). Effects of sponsorship disclosure on perceived integrity of biased recommendation agents. Information Systems Research, 30(2), 507–522. https://doi.org/10.1287/isre.2018.0811","Wojdynski, B. W., Evans, N. J., & Hoy, M. G. (2018). Measuring sponsorship transparency in the age of native advertising. Journal of Consumer Affairs, 52(1), 115–137. https://doi.org/10.1111/joca.12144","Evans, N. J., Wojdynski, B. W., & Hoy, M. G. (2019). How sponsorship transparency mitigates negative effects of advertising recognition. International Journal of Advertising, 38(3), 364–382. https://doi.org/10.1080/02650487.2018.1474998","Van Reijmersdal, E. A., Brussee, E., Evans, N., & Wojdynski, B. W. (2023). Disclosure-driven recognition of native advertising: A test of two competing mechanisms. Journal of Interactive Advertising, 23(2), 85–97. https://doi.org/10.1080/15252019.2022.2146991","McGrath, M. J., Lack, O., Tisch, J., & Duenser, A. (2025). Measuring trust in artificial intelligence: Validation of an established scale and its short form. Frontiers in Artificial Intelligence, 8, Article 1582880. https://doi.org/10.3389/frai.2025.1582880","Sah, S., Malaviya, P., & Thompson, D. (2018). Conflict of interest disclosure as an expertise cue: Differential effects due to automatic versus deliberative processing. Organizational Behavior and Human Decision Processes, 147, 127–146. https://doi.org/10.1016/j.obhdp.2018.05.008","Sénécal, S., & Nantel, J. (2004). The influence of online product recommendations on consumers’ online choices. Journal of Retailing, 80(2), 159–169. https://doi.org/10.1016/j.jretai.2004.04.001","Lakens, D. (2017). Equivalence tests: A practical primer for t tests, correlations, and meta-analyses. Social Psychological and Personality Science, 8(4), 355–362. https://doi.org/10.1177/1948550617697177","Prolific Research. (2026). Approving, rejecting, and returning submissions. https://researcher-help.prolific.com/en/articles/445208-approving-rejecting-and-returning-submissions","Prolific Research. (2025). Can I make partial payments to participants? https://researcher-help.prolific.com/en/articles/445234-can-i-make-partial-payments-to-participants"],"task_instruction_price_serving":"The energy bars available in this task will have the same price and serving size.","consent":{"status":"Institution-approved consent text supplied by researcher; retained unchanged in v1.3.","screen":"S00","title":"Informed Consent","paragraphs":["I hereby confirm that I agree to participate in a study about decision making in various fields.","Study goal: to assess product choice accuracy.","Potential risks: no potential risks.","Potential benefits from the research: contribution to the field of decision making.","I understand that if, for any reason, I will choose to stop my participation I can do it at any time and without cost and will not be required to explain my decision.","In the event that during or following the experiment you will feel uncomfortable, please contact the principal investigator(s) through the email listed below.","Please indicate whether you agree to participate in the study."],"response_options":["I agree","I disagree and wish to decline my participation"],"decline_action":"Stop experimental procedure and do not assign or display experimental treatment; follow approved platform exit handling","missing_in_supplied_text":"Approved consent refers to a contact email not included in supplied copy; verify approved participant contact channel separately and do not alter approved wording.","review_note":"Preserve institution-approved consent verbatim. Verify that approved participant contact channel, debrief and applicable ethics coverage match the study. Do not independently edit approved wording."},"demographics":{"status":"Finalized demographic response options for unified app v1.5; all questions required.","variables":[{"code":"gender","label":"Gender","required_for_completion":true,"answer_format":"categorical; no decline response"},{"code":"age","label":"Age","required_for_completion":true,"answer_format":"integer years, 18–120"},{"code":"education","label":"Education","required_for_completion":true,"answer_format":"six screenshot-specified categories"},{"code":"income","label":"Income","required_for_completion":true,"answer_format":"twelve screenshot-specified GBP household annual income brackets"}],"notes":"All four displayed demographic questions require a substantive response. No prefer-not-to-say category is presented."},"page_breaks_between_constructs":{"status":"deferred until researcher preview and checks","note":"Do not hardcode a final Qualtrics page-break plan yet"},"questionnaire_block_order":{"status":"finalized: fixed, not counterbalanced","method":"fixed","blocks":["PRMV","PST","TRUST","RELInt","PRB"],"locked_within_block_order":true,"fixed_for_all_participants":true,"shuffle_blocks":false,"shuffle_items_within_blocks":false,"store_field":"item_block_order","store_value":"PRMV,PST,TRUST,RELInt,PRB","qualtrics_page_breaks":"deferred until researcher preview and checks"},"assignment_resume_policy":{"status":"finalized policy; specific hosting and platform-integration implementation remains open","decision":"Use Qualtrics Embedded Data or trusted server-side study state, keyed by stable appropriately protected participant identifier.","stable_identifier_required":true,"trusted_state_options":["Qualtrics Embedded Data","Trusted server-side study state"],"store_at_first_assignment":["participant_id","condition_id","RM","SD","profile_A","profile_B","A_position","configuration_id"],"restore_on":["page refresh","reentry","resume"],"restore_prior_answers_if_supported":true,"silent_rerandomization_permitted":false,"missing_record_policy":"Document recovery/exit procedure; do not silently rerandomize","researcher_override":"Strictly isolated from live participants","pending_implementation":["hosting provider","embedded/redirect mode","secure Prolific/Qualtrics/HTML handoff","realization of storage and resume handling"]},"prespecification_todo":{"status":"Completion and practical screening rules adopted in v1.3; specific statistical tests/multiplicity still pending data-analysis planning.","decision_stage":"data analysis planning","product_equivalence":"Operational screen p > .05 (not proof of equivalence); report effect size, CI, statistical test.","manipulation_check_criteria":"Not specified yet: acceptable role/disclosure separation, recognition/comprehension rates, revision thresholds.","analysis_contrasts":"Not specified yet: planned RM×SD interaction contrasts, focal simple effects, multiplicity.","missingness_policy":"All displayed questions mandatory; incomplete/withdrawn/timed-out excluded from complete-case analysis; SD-AC2 NA by design C1/C3; no imputation or partial scoring; compensation must follow Prolific rules.","sensitivity_analysis":"Deferred to data-analysis planning.","transparency_note":"Analytic choices determined after seeing results are post hoc/exploratory, not prespecified.","sample_size":"To be determined after pretests","preregistration":"After sample-size determination","qualtrics_construct_page_breaks":"To be decided after researcher preview and checks"},"last_updated":"2026-11-10","fixed_order_enforced":true,"all_displayed_items_required":true,"completion_policy":{"status":"finalized research-side gating; Prolific compensation adjudicated separately under platform rules","all_displayed_questions_required":true,"validate_each_screen_before_next":true,"validate_full_record_before_completed":true,"no_default_answers":true,"require_consent_agree":true,"require_choice_RELBhv":true,"require_all_substantive_items":true,"required_substantive_count":15,"require_all_displayed_manipulation_attention_checks":true,"sd_ac2_conditional":{"C1":"NA—not administered; passes completion check","C2":"required","C3":"NA—not administered; passes completion check","C4":"required"},"require_demographics":["gender","age","education","income"],"prefer_not_to_say_counts_as_recorded_response_if_offered":false,"withdrawal_always_allowed":true,"do_not_force_answers_after_withdrawal":true,"completed_status_only_if_validation_passes":true,"issue_researcher_prolific_code_only_if_completed_and_server_acknowledged":true,"do_not_auto_redirect_to_prolific_completion_for_incomplete":true,"completion_status_values":["in_progress","withdrawn","timed_out","invalid_incomplete","completed"],"complete_case_analysis_only":true,"app_side_imputation":false,"partial_composite_scoring_for_complete_cases":false,"record_attrition_by_condition":true,"participant_data_withdrawal_handling":"honor consent, ethics requirements, and Prolific withdrawal data-deletion rules","prolific_payment":"separate adjudication: incomplete returns/timeouts not normal completions; consider approval/partial compensation under Prolific rules for researcher-caused technical failures or lost completed data; no blanket auto-rejection","nocode":"Prolific may permit NOCODE submission despite app withholding researcher-controlled completion code","missing_field_message":"Please answer this question to continue.","debrief_requirement":"Provide institution-approved deception/sponsorship debrief at the appropriate study exit; the participant submission screen now contains only a short thank-you."},"product_pretest_decision":{"screening_rule":"No statistically significant difference detected in baseline profile comparison (p > .05).","user_accepts_as_practical_screening":true,"statistical_equivalence_proven":false,"do_not_claim_equivalence_from_nonsignificance":true,"report_effect_size_and_confidence_interval":true,"mathematical_equal_mad_and_absolute_attribute_deviations":true,"formal_equivalence_bounds":"not selected; not necessary for researcher chosen pretest screening"},"general_instructions":{"title":"General instructions","rules":["This task requires your full attention.","Please complete this task on a desktop or laptop computer only.","Please complete the task in one sitting, without breaks.","From now until the end of the task, please do not browse the web or use your mobile phone or other devices."],"warning":"Failing to comply with these requirements may invalidate your participation.","closing":"Thank you."},"demographic_questionnaire":{"gender":{"type":"single_choice","required":true,"options":["female","male","nonbinary","self_describe"]},"age":{"type":"integer","minimum":18,"maximum":80,"required":true},"education":{"type":"single_choice","required":true,"options":[{"code":"left_before_lower_secondary","label":"left before completing lower-secondary"},{"code":"completed_lower_secondary","label":"completed lower-secondary"},{"code":"completed_upper_secondary","label":"completed upper-secondary"},{"code":"studied_higher_education","label":"studied in higher education"},{"code":"completed_bachelor","label":"completed bachelor degree"},{"code":"completed_master_or_above","label":"completed master's degree or above"}]},"income":{"type":"single_choice","required":true,"currency":"GBP","unit":"annual household income","options":[{"code":"under_10000","label":"Less than £10,000"},{"code":"10000_19999","label":"£10,000 - £19,999"},{"code":"20000_29999","label":"£20,000 - £29,999"},{"code":"30000_39999","label":"£30,000 - £39,999"},{"code":"40000_49999","label":"£40,000 - £49,999"},{"code":"50000_59999","label":"£50,000 - £59,999"},{"code":"60000_69999","label":"£60,000 - £69,999"},{"code":"70000_79999","label":"£70,000 - £79,999"},{"code":"80000_89999","label":"£80,000 - £89,999"},{"code":"90000_99999","label":"£90,000 - £99,999"},{"code":"100000_149999","label":"£100,000 - £149,999"},{"code":"150000_or_more","label":"£150,000 or more"}]}},"app_version":"1.14","app_revision_note":"Unified app v1.13: highlight the entire assigned-principal sentence in both retailer-side and consumer-side mandate conditions; retain the separate emphasized-interest phrase and all other v1.12 experimental functionality.","income_category_revision":{"last_option":"£150,000 or more","code":"150000_or_more"},"construct_screen_breaks":{"screens":{"S04":["PRMV"],"S04b":["PST","TRUST"],"S04c":["RELInt"],"S04d":["PRB"]},"page_breaks_after":["PRMV","TRUST","RELInt"],"block_order":["PRMV","PST","TRUST","RELInt","PRB"],"all_items_required":true,"participant_construct_headings":false,"researcher_construct_headings":true},"check_screen_breaks":{"screens":{"S05":["SD-AC1","SD-AC2 (C2/C4 only)"],"S05b":["RM-AC","RM-MC1","RM-MC2"],"S05c":["SD-MC1","SD-MC2"]},"page_breaks_after":["SD-AC2 (when administered)","RM-MC2"],"all_displayed_items_required":true},"screen_transition":{"type":"fade-out then fade-in","fade_out_ms":200,"fade_in_ms":300,"respects_reduced_motion":true},"final_submission_message":"You've completed the survey. Thank you for your participation.","terminology_clarification":{"retailer":"The online store that provides the AI agent and, in retailer-mandate conditions, the party the agent represents.","seller":"An independent company offering an energy bar through the retailer, and the party paying for a featured recommendation.","participant_role_intro":"An online retailer provides an AI agent to help shoppers evaluate energy bars offered by independent sellers through its store.","disclosure_text_unchanged":true,"measurement_item_wording_unchanged":true},"participant_access":{"allowed_devices":["desktop","laptop"],"blocked_devices":["mobile_phone","tablet"],"method":"client-side detection using User-Agent, mobile client hints, and iPadOS desktop-mode heuristic","enforcement":"Early participant-mode gate before consent and experimental assignment; no completion code; researcher preview exempt for testing.","caveat":"Browser-only device detection cannot be guaranteed for spoofed or unidentified devices; hosting/Qualtrics should independently enforce eligibility.","blocked_status":"device_blocked"}}</script>
+<script>
+(()=>{'use strict';
+const SPEC=JSON.parse(document.getElementById('study-config').textContent);
+const BUILD='8521.01.01_App_2026_1124_1554';
+const param=new URLSearchParams(location.search);
+// One distributable file, with automatic presentation-mode detection.
+// Local file:// = researcher preview by default. Explicit researcher URL flags
+// are accepted on hosted non-live links (as in Study 8520.04.04).
+// A live link or explicit participant override cannot enter researcher mode.
+const liveRequested=param.get('live')==='1';
+const participantOverride=param.get('mode')==='participant'||param.get('participant')==='1';
+const researcherRequested=param.get('test')==='1'||param.get('test_mode')==='1'||
+  param.get('preview')==='1'||param.get('researcher')==='1'||
+  ['test','researcher','preview'].includes(param.get('mode'));
+const localResearcher=location.protocol==='file:';
+const preview=!liveRequested&&!participantOverride&&(localResearcher||researcherRequested);
+const live=liveRequested;
+const modeSource=preview?(localResearcher?'local_file_auto':'explicit_test_url'):(live?'live_participant_link':participantOverride?'participant_override':'hosted_participant_default');
+const K='study8521.01.01.v1.7'; // Keep storage namespace stable across v1.7 -> v1.13 upgrades.
+const allowedScreens=['S00','SGEN','S01','S02','S03','S04','S04b','S04c','S04d','S05','S05b','S05c','S06','S07'];
+const itemOrder=SPEC.measures.map(v=>v.code);
+const blockOrder=['PRMV','PST','TRUST','RELInt','PRB'];
+const blockLabels={PRMV:'',PST:'',TRUST:'',RELInt:'',PRB:''};
+const blockSource={PRMV:'Adapted from Wang & Wang (2019); wording negatively keyed in protocol v1.3.',PST:'Adapted chiefly from Wojdynski, Evans, & Hoy (2018) and Evans, Wojdynski, & Hoy (2019).',TRUST:'McGrath et al. (2025), S-TIAS; adapted response format.',RELInt:'Adapted from McGrath et al. (2025) with advertising-literature support.',PRB:'Adapted from Wang, Xu, & Wang (2018) and Sah, Malaviya, & Thompson (2018).'};
+const cfgs=SPEC.configurations;
+const byId=Object.fromEntries(cfgs.map(x=>[x.configuration_id,x]));
+const fixedNames={PRMV:'Perceived Representational Mandate Violation',PST:'Perceived Sponsorship Transparency',TRUST:'Trust',RELInt:'Intentional Reliance',PRB:'Perceived Recommendation Bias'};
+const $=s=>document.querySelector(s);
+const $$=s=>[...document.querySelectorAll(s)];
+const toText=v=>v===undefined||v===null?'':String(v);
+const cleanPID=v=>v&&/^[a-zA-Z0-9_.:@-]{1,120}$/.test(v)?v:null;
+const newId=()=> 'demo-'+(crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2));
+let pid=cleanPID(param.get('pid'))||cleanPID(param.get('PROLIFIC_PID'))||cleanPID(param.get('ResponseID'))||null;
+if(!pid&&!live){try{pid=cleanPID(localStorage.getItem(K+'.demoPid'));if(!pid){pid=newId();localStorage.setItem(K+'.demoPid',pid)}}catch(e){pid=newId()}}
+let current=preview?'STEST':'S00', entry=Date.now(), history=[], cfg=null, choice=null, data=null, assignmentSource='', ack=false, fatal='';
+const THANK_YOU_DURATION_MS=2000;
+let thankYouTimer=null, thankYouDwellElapsed=false, qualtricsAdvanceSent=false;
+function requestQualtricsAdvance(){
+ if(qualtricsAdvanceSent||!thankYouDwellElapsed||current!=='S07'||preview||!live||
+    !originOK||!ack||data.submission_validated!==1||
+    validateEntireSubmission().length!==0)return;
+ qualtricsAdvanceSent=true;
+ // Stage complete and the thank-you message has been visible for 2 seconds.
+ // This message asks the Qualtrics host to submit the survey page; only that
+ // page transition can durably save the staged Embedded Data values.
+ window.parent.postMessage({
+  type:'STUDY_8521_ADVANCE',
+  study:SPEC.study,build:BUILD,
+  participant_id:pid,configuration_id:cfg.configuration_id
+ },targetOrigin);
+}
+function startThankYouDwell(){
+ if(thankYouTimer!==null){clearTimeout(thankYouTimer);thankYouTimer=null}
+ thankYouDwellElapsed=false;qualtricsAdvanceSent=false;
+ thankYouTimer=window.setTimeout(()=>{
+  thankYouTimer=null;thankYouDwellElapsed=true;
+  if(preview){
+   $('#previewStatus').textContent='Two-second thank-you screen complete. Qualtrics advancement is disabled in researcher preview.';
+  }else{
+   requestQualtricsAdvance();
+  }
+ },THANK_YOU_DURATION_MS);
+}
+const incoming=param.get('assignment')||param.get('config')||param.get('cfg');
+const targetOrigin=param.get('parent_origin')||'';
+const originOK=(()=>{try{const o=new URL(targetOrigin);return o.protocol==='https:'&&o.origin===targetOrigin}catch(e){return false}})();
+const stageKey=K+'.stage.'+pid;
+const assignmentKey=K+'.assigned.'+pid;
+const completeKey=K+'.complete.'+pid;
+const withdrawnKey=K+'.withdrawn.'+pid;
+const readStored=(key,session=false)=>{try{return JSON.parse((session?sessionStorage:localStorage).getItem(key)||'null')}catch(e){return null}};
+const putStored=(key,v,session=false)=>{try{(session?sessionStorage:localStorage).setItem(key,JSON.stringify(v))}catch(e){/*Storage denied; host still authoritative in live mode.*/}};
+const removeStored=(key,session=false)=>{try{(session?sessionStorage:localStorage).removeItem(key)}catch(e){}};
+function requireConfig(){
+  if(live&&(!pid||!incoming||!originOK))return 'This live study link is missing a stable participant ID, an assigned configuration, or a valid HTTPS parent_origin. No experimental assignment has been generated.';
+  if(incoming&&!byId[incoming])return 'The configuration in this link is invalid. No experimental assignment has been generated.';
+  if(live){const prev=readStored(assignmentKey);if(prev&&prev!==incoming)return 'A previous assignment for this participant differs from the provided link. The app will not silently reassign this participant. Please restore the original configuration through the study platform.'}
+  return '';
+}
+fatal=requireConfig();
+function activeConfig(){if(cfg)return cfg;if(preview)return byId[$('#previewConfig').value];if(incoming)return byId[incoming];const stored=readStored(assignmentKey);if(stored&&byId[stored])return byId[stored];return byId[cfgs[Math.floor(Math.random()*cfgs.length)].configuration_id]}
+function initData(){return {study:SPEC.study,protocol_version:'1.5',build:BUILD,pid:pid||'',preview_mode:preview,live_mode:live,mode_detection:modeSource,consent_response:'',condition_id:null,mandate:null,disclosure:null,configuration_id:null,profile_A:null,profile_B:null,A_position:null,product_A:null,product_B:null,item_block_order:blockOrder.join(','),choice_raw:null,RELBhv:null,measures:{},checks:{},demographics:{},scores:{},started_at:new Date().toISOString(),completed:0,completed_at:null,completion_status:'in_progress',submission_state:'not_submitted',submission_validated:0,submission_validated_at:null,host_acknowledged_at:null,withdrawn_at:null,assignment_source:null,screen_times_ms:{}}}
+data=initData();
+function insertHighlightedPhrases(node,fullText,phrases){
+ const highlights=phrases.map(phrase=>({start:fullText.indexOf(phrase),phrase}));
+ if(highlights.some(x=>x.start<0))throw new Error('Study emphasis phrase missing from approved text.');
+ highlights.sort((a,b)=>a.start-b.start);
+ const frag=document.createDocumentFragment();let cursor=0;
+ for(const {start,phrase} of highlights){
+  if(start<cursor)throw new Error('Overlapping study emphasis phrases.');
+  if(start>cursor)frag.append(document.createTextNode(fullText.slice(cursor,start)));
+  const mark=document.createElement('mark');mark.className='attentionHighlight';
+  mark.textContent=phrase;frag.append(mark);cursor=start+phrase.length;
+ }
+ if(cursor<fullText.length)frag.append(document.createTextNode(fullText.slice(cursor)));
+ node.replaceChildren(frag);
+}
+function assign(requested){
+ const previous=readStored(assignmentKey);let id=requested||incoming||previous||cfgs[Math.floor(Math.random()*cfgs.length)].configuration_id;
+ if(!preview&&previous&&id!==previous){fatal='The participant already has a different stored assignment. Restore that assignment through the study platform.';return false}
+ cfg=byId[id];if(!cfg){fatal='Unknown configuration.';return false}
+ if(!preview)putStored(assignmentKey,id);
+ assignmentSource=preview?'researcher_preview':incoming?(live?'trusted_host_parameter':'provided_url'):'local_demo';
+ Object.assign(data,{configuration_id:id,condition_id:cfg.condition,mandate:cfg.mandate,disclosure:cfg.disclosure,profile_A:cfg.profile_A,profile_B:cfg.profile_B,A_position:cfg.A_position,product_A:SPEC.profiles[cfg.profile_A],product_B:SPEC.profiles[cfg.profile_B],assignment_source:assignmentSource});
+ // Highlight the assigned principal and whose interests the agent prioritizes;
+ // text itself remains identical to the approved protocol wording.
+ const assignedParty=cfg.mandate==='retailer'?'retailer':'consumer';
+ // Highlight the complete assignment sentence symmetrically across both conditions.
+ const roleHighlights = [
+  'For this shopping task, the AI agent has been assigned to represent the '+assignedParty+'.',
+  'prioritize the '+assignedParty+"'s interests"
+ ];
+ insertHighlightedPhrases($('#roleText'),SPEC.role_text[cfg.mandate], roleHighlights);
+ // Emphasize the entire factual sponsorship disclosure, including the paying party.
+ insertHighlightedPhrases($('#disclosureText'),SPEC.disclosure_text,[SPEC.disclosure_text]);
+ $('#disclosure').classList.toggle('hidden',!cfg.disclosure);
+ if(!cfg.disclosure){data.checks['SD-AC2']=null;}else if(data.checks['SD-AC2']===null){delete data.checks['SD-AC2'];}
+ renderProducts();renderChecks();renderMeta();return true;
+}
+function renderProducts(){const parent=$('#products');parent.replaceChildren();if(!cfg)return;
+ const order=cfg.A_position==='left'?['A','B']:['B','A'];
+ order.forEach(letter=>{
+ const profile=SPEC.profiles[cfg['profile_'+letter]];
+ const card=document.createElement('label');card.className='product'+(choice===letter?' selected':'');card.setAttribute('data-product',letter);
+ const head=document.createElement('div');head.className='cardhead';const nm=document.createElement('h3');nm.textContent='Energy Bar '+letter;head.appendChild(nm);if(letter==='A'){const badge=document.createElement('span');badge.className='recommend';badge.textContent='AI Recommended';head.appendChild(badge)}card.appendChild(head);
+ const tab=document.createElement('table');for(const [nm,value] of [['Total fat',profile.fat],['Protein',profile.protein],['Carbohydrates',profile.carbohydrates]]){const tr=document.createElement('tr');const name=document.createElement('td');name.textContent=nm;const val=document.createElement('td');val.textContent=value+' g';tr.append(name,val);tab.appendChild(tr)}card.appendChild(tab);
+ const select=document.createElement('div');select.className='selectline';const input=document.createElement('input');input.type='radio';input.name='productChoice';input.value=letter;input.checked=choice===letter;input.addEventListener('change',()=>{choice=letter;data.choice_raw=letter;data.RELBhv=letter==='A'?1:0;renderProducts();updateNext()});const st=document.createElement('span');st.textContent='Choose Energy Bar '+letter;select.append(input,st);card.appendChild(select);parent.appendChild(card)
+ });
+}
+function addRadio(parent,name,options,selected,handler){
+ const list=document.createElement('div');list.className='radioList';list.setAttribute('role','radiogroup');list.setAttribute('aria-label',name);
+ options.forEach(([value,label])=>{const row=document.createElement('label');const inp=document.createElement('input');inp.type='radio';inp.name=name;inp.value=value;inp.checked=selected===value;inp.addEventListener('change',()=>{handler(value);updateNext()});const tx=document.createElement('span');tx.textContent=label;row.append(inp,tx);list.append(row)});parent.appendChild(list)
+}
+function addScale(parent,code,text,anchors=['Strongly disagree','Strongly agree'],group='measures'){
+ const q=document.createElement('div');q.className='q';const question=document.createElement('div');question.className='questionText';question.textContent=text;q.append(question);
+ const line=document.createElement('div');line.className='scaleBox';line.setAttribute('role','radiogroup');line.setAttribute('aria-label',text);
+ for(let k=1;k<=7;k++){const lab=document.createElement('label');const radio=document.createElement('input');radio.type='radio';radio.name=code;radio.value=String(k);radio.setAttribute('aria-label',String(k));radio.checked=data[group][code]===k;radio.addEventListener('change',()=>{data[group][code]=k;updateNext()});const num=document.createElement('span');num.textContent=String(k);lab.append(radio,num);line.append(lab)}q.append(line);
+ const an=document.createElement('div');an.className='anchors';const l=document.createElement('span');l.textContent=anchors[0];const r=document.createElement('span');r.textContent=anchors[1];an.append(l,r);q.append(an);parent.append(q)
+}
+// Separate pages after PRMV, after Trust, and after Intentional Reliance.
+// All pages retain the original five-construct order, and researcher-only
+// headings remain invisible to participants.
+const measureScreenBlocks={S04:['PRMV'],S04b:['PST','TRUST'],S04c:['RELInt'],S04d:['PRB']};
+const measureScreenForBlock=Object.fromEntries(Object.entries(measureScreenBlocks).flatMap(([screen,blocks])=>blocks.map(block=>[block,screen])));
+function renderScales(){
+ for(const [screen,keys] of Object.entries(measureScreenBlocks)){
+  const area=$('#'+{S04:'scaleBlocks_PRMV',S04b:'scaleBlocks_PST_TRUST',S04c:'scaleBlocks_RELInt',S04d:'scaleBlocks_PRB'}[screen]);
+  area.replaceChildren();
+  keys.forEach(key=>{
+   const block=document.createElement('div');block.className='block';block.dataset.block=key;
+   if(preview){const heading=document.createElement('h2');heading.className='researchHeading';heading.textContent=fixedNames[key]+' ('+key+')';block.append(heading)}
+   SPEC.measures.filter(v=>v.code.startsWith(key)).forEach(v=>addScale(block,v.code,v.item));
+   area.append(block);
+  });
+ }
+}
+function makeQ(parent,title){const q=document.createElement('div');q.className='q';const t=document.createElement('div');t.className='questionText';t.textContent=title;q.append(t);parent.append(q);return q}
+// Three manipulation/attention-check pages. Disclosure recognition is always first;
+// SD-AC2 is present and mandatory only for disclosed sponsorship (C2/C4).
+// A page break follows SD-AC2 when administered, and RM-MC2 in every condition.
+const checkScreenKeys={
+ S05:['SD-AC1','SD-AC2'],
+ S05b:['RM-AC','RM-MC1','RM-MC2'],
+ S05c:['SD-MC1','SD-MC2']
+};
+const checkScreenDivs={S05:'checksDisclosure',S05b:'checksMandate',S05c:'checksSponsorship'};
+function checksForScreen(screen){return (checkScreenKeys[screen]||[]).filter(key=>key!=='SD-AC2'||!!cfg?.disclosure)}
+function renderChecks(){if(!cfg)return;
+ for(const [screen,containerId] of Object.entries(checkScreenDivs)){
+  const parent=document.getElementById(containerId);parent.replaceChildren();
+  const fields=checksForScreen(screen);
+  fields.forEach((key,i)=>{
+   const meta=SPEC.checks[key];
+   const kind=['SD-AC1','SD-AC2','RM-AC'].includes(key)?'single':key.startsWith('RM-MC')?'bipolar':'agreement';
+   if(preview){
+    const title=key.startsWith('RM-MC')?'Representational Mandate (RM-MC)':key.startsWith('SD-MC')?'Sponsorship Disclosure (SD-MC)':key==='SD-AC1'?'Disclosure Recognition (SD-AC1)':key==='SD-AC2'?'Sponsorship Disclosure Comprehension (SD-AC2)':'Representational Mandate Comprehension (RM-AC)';
+    if(i===0||!['RM-MC2','SD-MC2'].includes(key)){
+     const hd=document.createElement('h3');hd.className='researchHeading';hd.textContent=title;parent.append(hd)
+    }
+   }
+   const p=makeQ(parent,meta.text);
+   if(kind==='single'){
+    const options=meta.options.map((txt,i)=>[String(i+1),txt]);
+    addRadio(p,key,options,data.checks[key],v=>{data.checks[key]=v})
+   }else{
+    addScale(p,key,meta.text,kind==='bipolar'?['The retailer','The consumer']:['Strongly disagree','Strongly agree'],'checks');p.firstElementChild.remove()
+   }
+  });
+ }
+}
+function renderMeta(){const meta=$('#researchMetadata');if(!preview||!cfg||['STEST','S02','S03'].includes(current)){meta.classList.add('hidden');meta.replaceChildren();return}meta.classList.remove('hidden');meta.replaceChildren();
+ const p=document.createElement('div');p.textContent='Configuration: '+cfg.configuration_id+' | Mandate: '+cfg.mandate+' | Disclosure: '+cfg.disclosure+' | Profile A: '+cfg.profile_A+' | A position: '+cfg.A_position;meta.append(p);
+ if(measureScreenBlocks[current]){const info=document.createElement('div');info.style.marginTop='6px';const parts=measureScreenBlocks[current].map(k=>fixedNames[k]+' ('+k+'): '+blockSource[k]);info.textContent='Constructs and item sources (researcher only): '+parts.join('  •  ');meta.append(info)}
+ if(checkScreenKeys[current]){const info=document.createElement('div');info.textContent='Checks (researcher only): '+checksForScreen(current).join(', ')+'; source: Wang et al. (2018); Van Reijmersdal et al. (2023).';meta.append(info)}
+ if(current==='S00'){const w=document.createElement('div');w.textContent='Approved consent is retained unchanged. Investigator contact information must be configured in the host before recruitment.';meta.append(w)}
+ if(current==='S06'){const w=document.createElement('div');w.textContent='All four demographic responses required. Education and household annual income use the selected fixed response categories (GBP); no decline option. Gender, age, education, and income must all be recorded.';meta.append(w)}
+ if(current==='S07'){const w=document.createElement('div');w.textContent='Preview only: results are not a live Qualtrics record. The live application requires an authenticated durable host acknowledgment.';meta.append(w)}
+}
+const requiredChecks=()=>['SD-AC1',...(cfg?.disclosure?['SD-AC2']:[]),'RM-AC','RM-MC1','RM-MC2','SD-MC1','SD-MC2'];
+function demographicProblems(){
+ const problems=[];
+ const gender=$('#gender').value;
+ const age=$('#age').value.trim();
+ const education=$('input[name="education"]:checked')?.value;
+ const income=$('input[name="income"]:checked')?.value;
+ if(!gender)problems.push('gender');
+ if(!age||!Number.isInteger(Number(age))||Number(age)<18||Number(age)>80||$('#age').validity.badInput)problems.push('age');
+ if(!education)problems.push('education');
+ if(!income)problems.push('income');
+ return problems;
+}
+function missingOnScreen(screen=current){
+ if(screen==='S00'&&!$('input[name="consent"]:checked'))return ['consent'];
+ if(screen==='S03'&&!['A','B'].includes(choice))return ['productChoice'];
+ if(measureScreenBlocks[screen])return itemOrder.filter(k=>measureScreenBlocks[screen].some(block=>k.startsWith(block))&&(!Number.isInteger(data.measures[k])||data.measures[k]<1||data.measures[k]>7));
+ if(checkScreenKeys[screen])return checksForScreen(screen).filter(k=>{const v=data.checks[k];return ['RM-MC1','RM-MC2','SD-MC1','SD-MC2'].includes(k)?!Number.isInteger(v)||v<1||v>7:v===undefined||v===null||v==='';});
+ if(screen==='S06')return demographicProblems();
+ return [];
+}
+function validateEntireSubmission(){
+ const missing=[];
+ if(data.consent_response!=='agree')missing.push('consent');
+ if(!cfg||!['A','B'].includes(choice)||data.choice_raw!==choice||data.RELBhv!==(choice==='A'?1:0))missing.push('RELBhv');
+ for(const key of itemOrder)if(!Number.isInteger(data.measures[key])||data.measures[key]<1||data.measures[key]>7)missing.push(key);
+ for(const key of requiredChecks()){
+  const v=data.checks[key];if(['RM-MC1','RM-MC2','SD-MC1','SD-MC2'].includes(key)?!Number.isInteger(v)||v<1||v>7:v===undefined||v===null||v==='')missing.push(key);
+ }
+ if(cfg&&!cfg.disclosure&&data.checks['SD-AC2']!==null)missing.push('SD-AC2_NA_BY_DESIGN');
+ return missing.concat(demographicProblems());
+}
+let validationAttempted=false;
+function updateValidationMessages(show=false){
+ if(show)validationAttempted=true;
+ const missing=missingOnScreen();const list=new Set(missing);
+ $$('.invalidQuestion').forEach(n=>{n.classList.remove('invalidQuestion');n.querySelectorAll('.requiredError').forEach(n=>n.remove());});
+ $('#validationSummary').textContent='';
+ if(validationAttempted&&missing.length){
+  $('#validationSummary').textContent='Please answer every required question before continuing ('+missing.length+' remaining).';
+  for(const code of missing){
+   const control=code==='consent'?$('input[name="consent"]'):code==='productChoice'?$('#products'):$('#'+CSS.escape(code))||$('[name="'+code+'"]');
+   const q=code==='productChoice'?$('#products'):control?.closest('.q,.field')||control?.closest('.radioList')||control?.parentElement;
+   if(q){q.classList.add('invalidQuestion');const prompt=document.createElement('div');prompt.className='requiredError';prompt.textContent=code==='age'?'Please enter a whole-number age from 18 to 80.':'Please provide a response to this question.';q.append(prompt)}
+  }
+ }
+ return missing;
+}
+function updateNext(){let label='Continue';
+ if(current==='S00'){const val=$('input[name="consent"]:checked')?.value;label=val==='decline'?'Decline participation':'I agree — continue'}
+ if(current==='S06')label='Finish study';
+ const done=['STEST','S07','SDECLINE','SWITHDRAW','SERROR','SDEVICE'].includes(current);
+ $('#footer').classList.toggle('hidden',done);$('#withdrawLine').classList.toggle('hidden',preview||current==='S00'||['S07','SDECLINE','SWITHDRAW','SERROR','SDEVICE'].includes(current));
+ $('#nextBtn').disabled=false;$('#nextBtn').textContent=label;
+ $('#footerNote').textContent='';
+ $('#backArea').replaceChildren();if(preview&&history.length){const b=document.createElement('button');b.type='button';b.className='btn secondary';b.textContent='Back (preview)';b.addEventListener('click',previewBack);$('#backArea').append(b)}
+ updateValidationMessages(false);
+ if(cfg&&data.consent_response==='agree'&&!preview&&data.completion_status!=='withdrawn')saveDraft();
+}
+function snapshot(){return JSON.parse(JSON.stringify(data))}
+function saveDraft(){if(!pid||!cfg||preview)return;putStored(stageKey,{screen:current,choice,history,data:snapshot()},true)}
+function restoreDraft(){if(preview||!cfg)return;const x=readStored(stageKey,true);if(!x||!x.data||x.data.configuration_id!==cfg.configuration_id)return;
+ data=x.data;choice=x.choice;history=x.history||[];
+ renderProducts();renderScales();renderChecks();readDemographicsFromData();
+ if(allowedScreens.includes(x.screen))current=x.screen;
+ if(data.submission_state==='awaiting_host_confirmation'){data.completed=0;data.completed_at=null;}
+}
+let transitionTimer=null,hasRendered=false;
+function renderScreen(id,push=true){if(!document.getElementById(id))return;
+ if(transitionTimer!==null){clearTimeout(transitionTimer);transitionTimer=null;$$('.screen.fadeExit').forEach(el=>el.classList.remove('fadeExit'));}
+ const commit=()=>{
+  if(current&&current!==id){data.screen_times_ms[current]=(data.screen_times_ms[current]||0)+(Date.now()-entry);if(preview&&push)history.push(current)}current=id;entry=Date.now();
+  $$('.screen').forEach(el=>{el.classList.remove('fadeExit');el.classList.toggle('active',el.id===id)});
+  document.body.classList.toggle('completionScreenActive',id==='S07');
+  if(id==='S07'){
+   startThankYouDwell();
+  }else if(thankYouTimer!==null){
+   clearTimeout(thankYouTimer);thankYouTimer=null;thankYouDwellElapsed=false;
+  }
+  const idx=allowedScreens.indexOf(id);$('#validationSummary').textContent='';$$('.invalidQuestion').forEach(q=>{q.classList.remove('invalidQuestion');q.querySelectorAll('.requiredError').forEach(n=>n.remove());});$('#stepText').textContent=idx>=0?'Step '+(idx+1)+' of '+allowedScreens.length:'';
+  $('#progressBar').style.width=(idx>=0?Math.round(100*idx/(allowedScreens.length-1)):0)+'%';
+  if(preview){$('#previewStatus').textContent='Current screen: '+id+(cfg?' | '+cfg.configuration_id:' | not assigned')}
+  updateNext();renderMeta();window.scrollTo({top:0,behavior:'instant'});if(!preview)saveDraft();
+  hasRendered=true;
+ };
+ const old=$('.screen.active');const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ if(hasRendered&&old&&old.id!==id&&!reduced){
+  old.classList.add('fadeExit');$('#nextBtn').disabled=true;
+  transitionTimer=window.setTimeout(()=>{transitionTimer=null;commit()},200);
+ }else{commit()}
+}
+function previewBack(){const prev=history.pop();if(prev)renderScreen(prev,false)}
+function collectDemographics(){
+ data.demographics={
+  gender:$('#gender').value||null,
+  age:$('#age').value.trim()?Number($('#age').value):null,
+  education:$('input[name="education"]:checked')?.value||null,
+  income:$('input[name="income"]:checked')?.value||null,
+  income_currency:'GBP',
+  income_basis:'annual_household',
+  income_measurement:'ordinal_bracket',
+ };
+}
+function readDemographicsFromData(){
+ const d=data.demographics||{};
+ $('#gender').value=d.gender||'';
+ $('#age').value=d.age??'';
+ $$('input[name="education"]').forEach(r=>r.checked=r.value===d.education);
+ $$('input[name="income"]').forEach(r=>r.checked=r.value===d.income);
+}
+function score(){const mean=keys=>{const vals=keys.map(k=>data.measures[k]).filter(Number.isInteger);return vals.length===keys.length?vals.reduce((a,b)=>a+b,0)/vals.length:null};
+ for(const key of blockOrder)data.scores[key+'_mean']=mean(itemOrder.filter(x=>x.startsWith(key)));
+ data.scores['RM_MC_mean']=meanCheck(['RM-MC1','RM-MC2']);data.scores['SD_MC_mean']=meanCheck(['SD-MC1','SD-MC2']);
+ const rm=data.checks['RM-AC'];const sd=data.checks['SD-AC1'];const comp=data.checks['SD-AC2'];
+ data.scores['RM_AC_correct']=rm===undefined?null:Number((cfg.mandate==='retailer'&&rm==='1')||(cfg.mandate==='consumer'&&rm==='2'));
+ data.scores['SD_AC1_correct']=sd===undefined?null:Number((cfg.disclosure&&sd==='1')||(!cfg.disclosure&&sd==='2'));
+ data.scores['SD_AC2_correct']=!cfg.disclosure?null:comp===undefined?null:Number(comp==='1');
+}
+function meanCheck(codes){const vals=codes.map(k=>data.checks[k]);return vals.every(Number.isInteger)?vals.reduce((a,b)=>a+b,0)/vals.length:null}
+function stepForward(){
+ if(transitionTimer!==null)return;
+ if(['S07','SERROR','SWITHDRAW','SDECLINE','SDEVICE'].includes(current))return;
+ collectDemographics();
+ const missing=updateValidationMessages(true);
+ if(missing.length){const el=$('#validationSummary');if(el&&el.textContent)el.scrollIntoView({behavior:'smooth',block:'nearest'});return}
+ if(current==='S00'){
+  const selected=$('input[name="consent"]:checked')?.value;
+  if(selected==='decline'){data.consent_response='decline';data.completion_status='declined';renderScreen('SDECLINE');return}
+  data.consent_response='agree';if(!assign(preview?$('#previewConfig').value:null)){renderScreen('SERROR');$('#errorText').textContent=fatal;return}
+  validationAttempted=false;renderScreen('SGEN');return;
+ }
+ const idx=allowedScreens.indexOf(current);if(idx<1)return;
+ if(current==='S06'){
+  const allMissing=validateEntireSubmission();
+  if(allMissing.length){$('#validationSummary').textContent='Cannot submit: required responses are missing ('+allMissing.join(', ')+').';return}
+  score();data.submission_validated=1;data.submission_validated_at=new Date().toISOString();
+  data.completion_status='in_progress';
+  data.submission_state=preview?'preview_validated':live?'awaiting_host_confirmation':'local_demo_validated';
+  data.completed=0;data.completed_at=null;
+  validationAttempted=false;renderScreen('S07');postCompletion();return;
+ }
+ if(idx>=0&&idx<allowedScreens.length-1){validationAttempted=false;renderScreen(allowedScreens[idx+1])}
+}
+function postCompletion(){
+ if(!data.submission_validated||validateEntireSubmission().length){
+  data.completed=0;data.completion_status='invalid_incomplete';
+  renderScreen('SERROR');$('#errorText').textContent='The submission is incomplete. No completion code has been issued.';
+  return;
+ }
+ if(preview||!live||ack||data.completed)return;
+ // Keep the screen free of operational text. The host will acknowledge receipt.
+ window.parent.postMessage({
+  type:'STUDY_8521_SUBMIT',study:SPEC.study,build:BUILD,
+  participant_id:pid,configuration_id:cfg.configuration_id,payload:snapshot()
+ },targetOrigin);
+}
+window.addEventListener('message',ev=>{
+ if(!live||!originOK||ev.origin!==targetOrigin||ev.source!==window.parent)return;
+ const m=ev.data;
+ if(m&&m.type==='STUDY_8521_ACK'&&m.staged===true&&m.study===SPEC.study&&
+    m.participant_id===pid&&m.configuration_id===cfg?.configuration_id&&
+    data.submission_validated&&validateEntireSubmission().length===0){
+  if(ack)return; // Duplicate acknowledgments must not trigger duplicate navigation.
+  ack=true;data.completed=0;data.submission_state='staged_in_qualtrics';
+  data.host_acknowledged_at=new Date().toISOString();
+  data.completion_status='in_progress';
+  // The response is not yet durably saved; Qualtrics commits the values on Next.
+  $('#withdrawLine').classList.add('hidden');
+  requestQualtricsAdvance(); // Advances only after both ACK and 2 seconds elapsed.
+ }
+});
+function withdraw(){
+ if(preview||['SDECLINE','SWITHDRAW','SERROR','S00'].includes(current)||data.completed===1)return;
+ const ok=window.confirm('Withdraw from the study? You will not receive a study completion code.');if(!ok)return;
+ data.withdrawn_at=new Date().toISOString();data.completion_status='withdrawn';data.completed=0;data.submission_validated=0;data.submission_state='withdrawn';data.completed_at=null;
+ data.measures={};data.checks={};data.demographics={};data.choice_raw=null;data.RELBhv=null;data.scores={};choice=null;
+ putStored(withdrawnKey,{withdrawn_at:data.withdrawn_at});removeStored(stageKey,true);
+ if(live&&originOK)window.parent.postMessage({type:'STUDY_8521_WITHDRAWN',study:SPEC.study,participant_id:pid},targetOrigin);
+ renderScreen('SWITHDRAW');
+}
+function initResearcher(){
+ if(!preview)return;
+ $('#researchPanel').classList.add('on');
+ document.body.setAttribute('data-app-mode','researcher');
+ const pick=$('#previewConfig');
+ cfgs.forEach(c=>{const op=document.createElement('option');op.value=c.configuration_id;op.textContent=c.configuration_id+' — '+SPEC.conditions[c.condition].label;pick.append(op)});
+ const startId=byId[incoming]?incoming:'C1_X_L';pick.value=startId;
+ const jump=$('#jumpTo');
+ [...allowedScreens,'STEST','SDECLINE','SWITHDRAW'].forEach(id=>{const op=document.createElement('option');op.value=id;op.textContent=id==='STEST'?'Condition selection':id;jump.append(op)});
+ $('#introProfile').value=byId[startId].profile_A;
+ $('#introPosition').value=byId[startId].A_position==='left'?'L':'R';
+ function previewStart(id,opening=false){
+   data=initData();choice=null;history=[];cfg=null;validationAttempted=false;ack=false;
+   $$('input[name="consent"]').forEach(r=>r.checked=false);
+   $('#gender').value='';$('#age').value='';
+   $$('input[name="education"],input[name="income"]').forEach(r=>r.checked=false);
+   if(opening){renderScreen('STEST',false);return}
+   pick.value=id;
+   assign(id);renderScales();renderChecks();
+   history=['STEST'];
+   renderScreen('S00',false);
+ }
+ $$('[data-matrix-condition]').forEach(btn=>btn.addEventListener('click',()=>{
+   const id=btn.dataset.matrixCondition+'_'+$('#introProfile').value+'_'+$('#introPosition').value;
+   previewStart(id);
+ }));
+ pick.addEventListener('change',()=>previewStart(pick.value));
+ $('#previewReset').addEventListener('click',()=>previewStart(pick.value));
+ $('#previewBack').addEventListener('click',()=>previewBack());
+ $('#jumpBtn').addEventListener('click',()=>{
+   if(jump.value==='STEST'){history=[];renderScreen('STEST',false);return}
+   if(!cfg)assign(pick.value);
+   renderScreen(jump.value);
+ });
+ $('#downloadJson').addEventListener('click',()=>download('json'));
+ $('#downloadCsv').addEventListener('click',()=>download('csv'));
+ if(byId[incoming])previewStart(incoming);else previewStart(startId,true);
+}
+function download(format){if(!preview)return;score();const record=snapshot();let blob,ext;if(format==='json'){blob=new Blob([JSON.stringify(record,null,2)],{type:'application/json'});ext='json'}else{
+ const cols={study:record.study,protocol_version:record.protocol_version,build:record.build,pid:record.pid,condition_id:record.condition_id,configuration_id:record.configuration_id,mandate:record.mandate,disclosure:record.disclosure,profile_A:record.profile_A,profile_B:record.profile_B,A_position:record.A_position,choice_raw:record.choice_raw,RELBhv:record.RELBhv,...record.measures,...record.checks,...record.scores,...record.demographics,submission_validated:record.submission_validated,submission_state:record.submission_state,completion_status:record.completion_status,host_acknowledged_at:record.host_acknowledged_at,completed:record.completed};const esc=v=>'"'+String(v??'').replaceAll('"','""')+'"';const k=Object.keys(cols);blob=new Blob([k.map(esc).join(',')+'\n'+k.map(x=>esc(cols[x])).join(',')+'\n'],{type:'text/csv'});ext='csv'
+ }
+ const obj=URL.createObjectURL(blob);const a=document.createElement('a');a.href=obj;a.download='8521.01.01_'+(cfg?.configuration_id||'unassigned')+'_'+Date.now()+'.'+ext;a.click();setTimeout(()=>URL.revokeObjectURL(obj),1000)
+}
+function isUnsupportedMobileDevice(){
+ const userAgent=navigator.userAgent||'';
+ const clientHintsMobile=Boolean(navigator.userAgentData&&navigator.userAgentData.mobile===true);
+ const ipadDesktopMode=navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1;
+ return clientHintsMobile||ipadDesktopMode||/(android|iphone|ipad|ipod|windows phone|iemobile|blackberry|webos|opera mini|kindle|silk|playbook|tablet|mobi)/i.test(userAgent);
+}
+function setup(){
+ if(!preview&&isUnsupportedMobileDevice()){
+  data.completion_status='device_blocked';
+  data.submission_state='blocked_unsupported_device';
+  data.completed=0;
+  renderScreen('SDEVICE',false);
+  return;
+ }
+ if(fatal){renderScreen('SERROR',false);$('#errorText').textContent=fatal;return}
+ renderScales();renderChecks();
+ $('#nextBtn').addEventListener('click',stepForward);
+ $$('input[name="consent"]').forEach(r=>r.addEventListener('change',updateNext));
+
+ $('#withdrawBtn').addEventListener('click',withdraw);
+ for(const id of ['gender','age']){const el=$('#'+id);el.addEventListener('input',()=>{collectDemographics();updateNext()});el.addEventListener('change',()=>{collectDemographics();updateNext()})}
+ $$('input[name="education"],input[name="income"]').forEach(el=>el.addEventListener('change',()=>{collectDemographics();updateNext()}));
+ if(preview){initResearcher();return}
+ // The host-provided configuration is authoritative for live recruitment. A standalone local demo may make a persistent demo assignment.
+ const old=readStored(assignmentKey);if(old&&incoming&&old!==incoming){fatal='The requested configuration differs from the prior assignment.';renderScreen('SERROR',false);$('#errorText').textContent=fatal;return}
+ // Do not assign before informed consent. Restore pre-existing assignment only after participant agrees.
+ const withdrawn=readStored(withdrawnKey);if(withdrawn){renderScreen('SWITHDRAW',false);return}
+ const completed=readStored(completeKey);if(completed&&completed.configuration_id===(incoming||old)){
+   if(assign(incoming||old)){data.completed=0;data.completion_status='in_progress';data.submission_state='previous_browser_receipt';renderScreen('SERROR',false);$('#errorText').textContent='This browser has a prior platform receipt. Please follow the study platform instructions; only its authoritative record determines completion.';return}
+ }
+ const consent=readStored(stageKey,true);if(consent&&consent.data?.consent_response==='agree'){
+   data.consent_response='agree';if(assign(incoming||old)){restoreDraft();renderScreen(current,false);if(current==='S07'&&data.submission_validated)postCompletion();return}
+ }
+ renderScreen('S00',false)
+}
+setup();
+})();
+</script>
+
+<!-- Study 8521.01.01: targeted UI edits; data and condition assignments unchanged. -->
+<script id="study85210101-ui-patch-script">
+(function () {
+  "use strict";
+  if (window.__study85210101UiPatchInstalled) return;
+  window.__study85210101UiPatchInstalled = true;
+
+  var phrase = "The AI agent recommends Energy Bar A.";
+  var style = document.createElement("style");
+  style.id = "study85210101-ui-patch-style";
+  style.textContent = [
+    ".study85210101-recommendation-highlight{",
+    "background-color:#fff0ad;",
+    "border-radius:3px;",
+    "padding:1px 3px;",
+    "-webkit-box-decoration-break:clone;",
+    "box-decoration-break:clone;",
+    "}",
+    "table.study85210101-objectives-table tr > th:nth-child(2),",
+    "table.study85210101-objectives-table tr > td:nth-child(2){",
+    "text-align:right !important;",
+    "}"
+  ].join("");
+  document.head.appendChild(style);
+
+  function highlightRecommendation() {
+    if (!document.body) return;
+    var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    var matchingNodes = [], node;
+    while ((node = walker.nextNode())) {
+      var parent = node.parentElement;
+      if (!parent) continue;
+      if (parent.closest("script,style,textarea,select,noscript,.study85210101-recommendation-highlight")) continue;
+      if (node.nodeValue && node.nodeValue.indexOf(phrase) !== -1) matchingNodes.push(node);
+    }
+    matchingNodes.forEach(function (textNode) {
+      var startAt = textNode.nodeValue.indexOf(phrase);
+      if (startAt < 0) return;
+      var matchNode = textNode.splitText(startAt);
+      matchNode.splitText(phrase.length);
+      var span = document.createElement("span");
+      span.className = "study85210101-recommendation-highlight";
+      matchNode.parentNode.replaceChild(span, matchNode);
+      span.appendChild(matchNode);
+    });
+  }
+
+  function alignObjectiveValues() {
+    document.querySelectorAll("table").forEach(function (table) {
+      var firstRow = table.querySelector("tr");
+      if (!firstRow) return;
+      var cells = firstRow.querySelectorAll("th,td");
+      if (cells.length !== 2) return;
+      var first = cells[0].textContent.replace(/\s+/g, " ").trim();
+      var second = cells[1].textContent.replace(/\s+/g, " ").trim();
+      if (first === "Attribute" && second === "Objective") {
+        table.classList.add("study85210101-objectives-table");
+      }
+    });
+  }
+
+  function apply() {
+    highlightRecommendation();
+    alignObjectiveValues();
+  }
+  var queued = false;
+  var observer = new MutationObserver(function () {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(function () {
+      queued = false;
+      apply();
+    });
+  });
+
+  function start() {
+    apply();
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", start, { once: true });
+  } else {
+    start();
+  }
+})();
+</script>
+
+</body></html>
